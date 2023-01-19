@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "775153495783",
+    "project_id": "presence-geolocator",
+    "storage_bucket": "presence-geolocator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:775153495783:android:fbc54da941a3764a777c42",
+        "android_client_info": {
+          "package_name": "com.mrgbmrgbal.presence"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "775153495783-1ba6c3a8csf4j6do02usa915sm9st01g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvVjipusE0BBvf8AVttEJ80BEZUTX3zJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "775153495783-1ba6c3a8csf4j6do02usa915sm9st01g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "775153495783-0nmm0mk1u9otdki7prct3rj5du9mhbcl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mrgbmrgbal.presence"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
