@@ -17,6 +17,7 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
         children: [
           TextField(
             autocorrect: false,
+            keyboardType: TextInputType.number,
             controller: controller.nipC,
             decoration: const InputDecoration(
               labelText: "NIP",
@@ -44,7 +45,7 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
           const SizedBox(height: 30),
           ElevatedButton(
             onPressed: () {
-              controller.addPegawai();
+              controller.addEmployee();
             },
             child: const Text("ADD EMPLOYEE"),
           ),
