@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddPegawaiController extends GetxController {
+  RxBool isLoading = false.obs;
+  RxBool isLoadingAddEmployee = false.obs;
   TextEditingController nameC = TextEditingController();
   TextEditingController nipC = TextEditingController();
   TextEditingController emailC = TextEditingController();
@@ -14,6 +16,7 @@ class AddPegawaiController extends GetxController {
 
   Future<void> processAddEmployee() async {
     if (passAdminC.text.isNotEmpty) {
+      isLoading.value = true;
       try {
         String emailAdmin = auth.currentUser!.email!;
 
@@ -37,6 +40,7 @@ class AddPegawaiController extends GetxController {
             "name": nameC.text,
             "email": emailC.text,
             "uid": uid,
+            "role": "pegawai",
             "createdAt": DateTime.now().toIso8601String(),
           });
 
@@ -53,8 +57,10 @@ class AddPegawaiController extends GetxController {
           Get.back(); // close dialog
           Get.back(); // back to home
           Get.snackbar("Success", "Success add new employee");
+          isLoadingAddEmployee.value = false;
         }
       } on FirebaseAuthException catch (e) {
+        isLoadingAddEmployee.value = false;
         if (e.code == 'weak-password') {
           Get.snackbar('Error', 'Your password is too weak');
         } else if (e.code == 'email-already-in-use') {
@@ -65,18 +71,21 @@ class AddPegawaiController extends GetxController {
           Get.snackbar('Error', e.code);
         }
       } catch (e) {
+        isLoadingAddEmployee.value = false;
         Get.snackbar('Error', "Can't add new employee");
       }
     } else {
+      isLoading.value = false;
       Get.snackbar("Error", "Password is required");
     }
   }
 
-  void addEmployee() async {
+  Future<void> addEmployee() async {
     if (nameC.text.isNotEmpty &&
         nipC.text.isNotEmpty &&
         emailC.text.isNotEmpty) {
       //execution
+      isLoading.value = true;
       Get.defaultDialog(
           title: "Validasi Admin",
           content: Column(
@@ -96,15 +105,25 @@ class AddPegawaiController extends GetxController {
           ),
           actions: [
             OutlinedButton(
-              onPressed: () => Get.back(),
+              onPressed: () {
+                isLoading.value = false;
+                Get.back();
+              },
               child: const Text('Cancel'),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                await processAddEmployee();
-              },
-              child: const Text('Add Employee'),
-            )
+            Obx(
+              () => ElevatedButton(
+                onPressed: () async {
+                  if (isLoadingAddEmployee.isFalse) {
+                    await processAddEmployee();
+                  }
+                  isLoading.value = false;
+                },
+                child: Text(
+                  isLoadingAddEmployee.isFalse ? 'Add Employee' : "Loading...",
+                ),
+              ),
+            ),
           ]);
     } else {
       Get.snackbar('Error', 'NIP, name, and email is empty');

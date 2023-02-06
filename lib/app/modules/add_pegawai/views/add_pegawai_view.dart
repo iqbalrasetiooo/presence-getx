@@ -44,10 +44,14 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
           ),
           const SizedBox(height: 30),
           ElevatedButton(
-            onPressed: () {
-              controller.addEmployee();
+            onPressed: () async {
+              if (controller.isLoading.isFalse) {
+                await controller.addEmployee();
+              }
             },
-            child: const Text("ADD EMPLOYEE"),
+            child: Text(
+              controller.isLoading.isFalse ? "ADD EMPLOYEE" : "Loading...",
+            ),
           ),
         ],
       ),

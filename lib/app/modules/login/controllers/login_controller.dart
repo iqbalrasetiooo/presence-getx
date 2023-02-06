@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:presence/app/routes/app_pages.dart';
 
 class LoginController extends GetxController {
+  RxBool isLoading = false.obs;
   TextEditingController emailC = TextEditingController();
   TextEditingController passwordC = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  void login() async {
+  Future<void> login() async {
     if (emailC.text.isNotEmpty && passwordC.text.isNotEmpty) {
+      isLoading.value = true;
       try {
         UserCredential userCredential =
             await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -20,6 +22,7 @@ class LoginController extends GetxController {
 
         if (userCredential.user != null) {
           if (userCredential.user!.emailVerified) {
+            isLoading.value = false;
             if (passwordC.text == "password") {
               Get.offAllNamed(Routes.NEW_PASSWORD);
             } else {
@@ -31,7 +34,10 @@ class LoginController extends GetxController {
               middleText: "Please verification your email.",
               actions: [
                 OutlinedButton(
-                  onPressed: () => Get.back(),
+                  onPressed: () {
+                    isLoading.value = false;
+                    Get.back();
+                  },
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
@@ -43,7 +49,9 @@ class LoginController extends GetxController {
                         "Success",
                         "Please check your email!.",
                       );
+                      isLoading.value = false;
                     } catch (e) {
+                      isLoading.value = false;
                       Get.snackbar(
                         "Error",
                         "Cannot resend email verification.",
@@ -56,7 +64,9 @@ class LoginController extends GetxController {
             );
           }
         }
+        isLoading.value = false;
       } on FirebaseAuthException catch (e) {
+        isLoading.value = false;
         if (e.code == 'user-not-found') {
           Get.snackbar("error", "email is not registered");
           print('No user found for that email.');
@@ -65,6 +75,7 @@ class LoginController extends GetxController {
           print('Wrong password provided for that user.');
         }
       } catch (e) {
+        isLoading.value = false;
         Get.snackbar("Error", "Cannot login");
       }
     } else {
